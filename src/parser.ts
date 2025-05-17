@@ -6,6 +6,10 @@ export const parseIdlFile = async(path:string):Promise<IdlIR> => {
         const idl = JSON.parse(await fs.readFile(path, 'utf-8'));
         return parseIdlToIr(idl);
     } catch (error) {
-        throw new Error(`Failed to parse IDL file: ${error.message}`);
+        if (error instanceof Error) {
+            throw new Error(`Failed to parse IDL file: ${error.message}`);
+        } else {
+            throw new Error('Failed to parse IDL file: Unknown error');
+        }
     }
 }
