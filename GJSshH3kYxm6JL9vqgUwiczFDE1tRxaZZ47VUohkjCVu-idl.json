@@ -1,0 +1,1551 @@
+{
+  "address": "GJSshH3kYxm6JL9vqgUwiczFDE1tRxaZZ47VUohkjCVu",
+  "metadata": {
+    "name": "kinlend_protocol",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "cancel_loan_request",
+      "discriminator": [
+        191,
+        89,
+        190,
+        192,
+        169,
+        99,
+        215,
+        148
+      ],
+      "accounts": [
+        {
+          "name": "borrower",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "loan_request",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  113,
+                  117,
+                  101,
+                  115,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "borrower"
+              },
+              {
+                "kind": "arg",
+                "path": "loan_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  97,
+                  116,
+                  101,
+                  114,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request"
+              }
+            ]
+          }
+        },
+        {
+          "name": "loan_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_loan_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claim_collateral",
+      "discriminator": [
+        55,
+        78,
+        194,
+        172,
+        196,
+        18,
+        230,
+        252
+      ],
+      "accounts": [
+        {
+          "name": "lender",
+          "docs": [
+            "The lender claiming collateral. Must be the one recorded as the lender in the loan request."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "loan_request",
+          "docs": [
+            "Loan Request account (PDA) containing loan details.",
+            "Derived using: [b\"loan_request\", loan_request.borrower.as_ref(), &loan_request.loan_id.to_le_bytes()]"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  113,
+                  117,
+                  101,
+                  115,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request.borrower",
+                "account": "LoanRequestState"
+              },
+              {
+                "kind": "arg",
+                "path": "loan_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral_vault",
+          "docs": [
+            "Collateral Vault (PDA) that holds the collateral (in SOL lamports).",
+            "When closed, any remaining lamports are sent to the lender."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  97,
+                  116,
+                  101,
+                  114,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request"
+              }
+            ]
+          }
+        },
+        {
+          "name": "protocol_vault",
+          "docs": [
+            "Protocol Vault account (PDA) that collects fees."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "loan_registry",
+          "docs": [
+            "Loan Registry account (tracking all loans)."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "System Program for lamport transfers."
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_loan_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_loan_registry",
+      "discriminator": [
+        252,
+        103,
+        141,
+        111,
+        189,
+        117,
+        251,
+        175
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "loan_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_loan_request",
+      "discriminator": [
+        98,
+        217,
+        110,
+        114,
+        5,
+        69,
+        35,
+        204
+      ],
+      "accounts": [
+        {
+          "name": "borrower",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "loan_request",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  113,
+                  117,
+                  101,
+                  115,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "borrower"
+              },
+              {
+                "kind": "arg",
+                "path": "loan_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  97,
+                  116,
+                  101,
+                  114,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request"
+              }
+            ]
+          }
+        },
+        {
+          "name": "loan_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "loan_id",
+          "type": "u64"
+        },
+        {
+          "name": "loan_amount",
+          "type": "u64"
+        },
+        {
+          "name": "collateral",
+          "type": "u64"
+        },
+        {
+          "name": "duration_days",
+          "type": "u64"
+        },
+        {
+          "name": "sol_price",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_protocol_vault",
+      "discriminator": [
+        35,
+        15,
+        188,
+        80,
+        31,
+        67,
+        28,
+        109
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "protocol_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "fund_loan",
+      "discriminator": [
+        50,
+        221,
+        51,
+        13,
+        3,
+        142,
+        116,
+        215
+      ],
+      "accounts": [
+        {
+          "name": "lender",
+          "docs": [
+            "The lender funding the loan. Must sign the transaction."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "docs": [
+            "Configuration account storing protocol settings.",
+            "It is a PDA seeded with \"config\"."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "loan_request",
+          "docs": [
+            "Loan Request account representing the loan.",
+            "It is a PDA derived using the borrower's key and the loan_id."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  113,
+                  117,
+                  101,
+                  115,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request.borrower",
+                "account": "LoanRequestState"
+              },
+              {
+                "kind": "arg",
+                "path": "loan_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "borrower",
+          "docs": [
+            "Borrower’s main account (system account).",
+            "This account will receive USDC tokens through its associated token account."
+          ],
+          "writable": true
+        },
+        {
+          "name": "lender_usdc_account",
+          "docs": [
+            "Lender's USDC associated token account."
+          ],
+          "writable": true
+        },
+        {
+          "name": "borrower_usdc_account",
+          "docs": [
+            "Borrower’s USDC associated token account.",
+            "This account is initialized if needed and is derived from the borrower's address."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "borrower"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "usdc_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "usdc_mint",
+          "docs": [
+            "The USDC Mint account."
+          ]
+        },
+        {
+          "name": "token_program",
+          "docs": [
+            "Program for token operations."
+          ],
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "docs": [
+            "Program for associated token account operations."
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "System program."
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_loan_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "init_config",
+      "discriminator": [
+        23,
+        235,
+        115,
+        232,
+        168,
+        96,
+        1,
+        231
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "usdc_mint"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "liquidate_loan",
+      "discriminator": [
+        111,
+        249,
+        185,
+        54,
+        161,
+        147,
+        178,
+        24
+      ],
+      "accounts": [
+        {
+          "name": "lender",
+          "docs": [
+            "The lender initiating liquidation. Must match the lender in the loan request."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "loan_request",
+          "docs": [
+            "Loan Request account (PDA) that holds the loan details.",
+            "When closed, all lamports (including its rent deposit) are sent to the lender."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  113,
+                  117,
+                  101,
+                  115,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request.borrower",
+                "account": "LoanRequestState"
+              },
+              {
+                "kind": "arg",
+                "path": "loan_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  97,
+                  116,
+                  101,
+                  114,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request"
+              }
+            ]
+          }
+        },
+        {
+          "name": "loan_registry",
+          "docs": [
+            "Loan Registry account (for tracking loans). Not used in distribution here."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "protocol_vault",
+          "docs": [
+            "Protocol Vault account (for protocol fees)."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "System Program."
+          ],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "docs": [
+            "Rent sysvar (needed to compute the rent‑exempt minimum)."
+          ],
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_loan_id",
+          "type": "u64"
+        },
+        {
+          "name": "sol_price",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "repay_loan",
+      "discriminator": [
+        224,
+        93,
+        144,
+        77,
+        61,
+        17,
+        137,
+        54
+      ],
+      "accounts": [
+        {
+          "name": "borrower",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "borrower_usdc_account",
+          "writable": true
+        },
+        {
+          "name": "lender_usdc_account",
+          "writable": true
+        },
+        {
+          "name": "loan_request",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  113,
+                  117,
+                  101,
+                  115,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request.borrower",
+                "account": "LoanRequestState"
+              },
+              {
+                "kind": "arg",
+                "path": "loan_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral_vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  97,
+                  116,
+                  101,
+                  114,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "loan_request"
+              }
+            ]
+          }
+        },
+        {
+          "name": "protocol_vault_usdc",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  117,
+                  115,
+                  100,
+                  99
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "protocol_vault_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  117,
+                  115,
+                  100,
+                  99,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "loan_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  111,
+                  97,
+                  110,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "usdc_mint"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_loan_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "update_config",
+      "discriminator": [
+        29,
+        158,
+        252,
+        191,
+        10,
+        83,
+        219,
+        99
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "new_usdc_mint"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "CollateralVaultState",
+      "discriminator": [
+        172,
+        252,
+        212,
+        153,
+        17,
+        64,
+        71,
+        200
+      ]
+    },
+    {
+      "name": "ConfigState",
+      "discriminator": [
+        193,
+        77,
+        160,
+        128,
+        208,
+        254,
+        180,
+        135
+      ]
+    },
+    {
+      "name": "LoanRegistryState",
+      "discriminator": [
+        73,
+        11,
+        245,
+        150,
+        126,
+        111,
+        13,
+        37
+      ]
+    },
+    {
+      "name": "LoanRequestState",
+      "discriminator": [
+        138,
+        144,
+        64,
+        221,
+        130,
+        228,
+        129,
+        191
+      ]
+    },
+    {
+      "name": "ProtocolVaultState",
+      "discriminator": [
+        75,
+        247,
+        31,
+        117,
+        53,
+        48,
+        172,
+        5
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "AlreadyFunded",
+      "msg": "Loan is already funded."
+    },
+    {
+      "code": 6001,
+      "name": "NotFunded",
+      "msg": "Loan Request is not funded yet."
+    },
+    {
+      "code": 6002,
+      "name": "LoanExpired",
+      "msg": "Loan has expired."
+    },
+    {
+      "code": 6003,
+      "name": "LoanIsNotExpired",
+      "msg": "Loan is not expired."
+    },
+    {
+      "code": 6004,
+      "name": "NotFoundInRegistry",
+      "msg": "Loan Request not found in the registry."
+    },
+    {
+      "code": 6005,
+      "name": "CalculationError",
+      "msg": "Calculation Error."
+    },
+    {
+      "code": 6006,
+      "name": "PageIsFull",
+      "msg": "Page is full."
+    },
+    {
+      "code": 6007,
+      "name": "InsuffientCollateral",
+      "msg": "Insufficient Collateral"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidOracleAccount",
+      "msg": "Oracle account is invalid"
+    },
+    {
+      "code": 6009,
+      "name": "CannotLiquidateYet",
+      "msg": "Cannot liquidate yet"
+    },
+    {
+      "code": 6010,
+      "name": "LoanRegistryPageNotFound",
+      "msg": "Loan registry page not found"
+    },
+    {
+      "code": 6011,
+      "name": "UnauthorizedLender",
+      "msg": "Unauthorized Lender"
+    },
+    {
+      "code": 6012,
+      "name": "Overflow",
+      "msg": "Overflow"
+    },
+    {
+      "code": 6013,
+      "name": "NoCollateral",
+      "msg": "Collateral Not Found"
+    },
+    {
+      "code": 6014,
+      "name": "NotRightBorrower",
+      "msg": "You are not a right borrower"
+    },
+    {
+      "code": 6015,
+      "name": "IncorrectUsdcMintAddress",
+      "msg": "Incorrect USDC Mint address"
+    },
+    {
+      "code": 6016,
+      "name": "RepaymentTimeExpired",
+      "msg": "Repayment time expired."
+    },
+    {
+      "code": 6017,
+      "name": "InsufficientBalance",
+      "msg": "Insufficient Balance"
+    },
+    {
+      "code": 6018,
+      "name": "NotRightLender",
+      "msg": "Not a right lender"
+    },
+    {
+      "code": 6019,
+      "name": "NotAdmin",
+      "msg": "NotAdmin"
+    }
+  ],
+  "types": [
+    {
+      "name": "CollateralVaultState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "usdc_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LoanRegistryState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "loan_requests",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "total_loans",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LoanRequestState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "loan_id",
+            "type": "u64"
+          },
+          {
+            "name": "borrower",
+            "type": "pubkey"
+          },
+          {
+            "name": "lender",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "loan_amount",
+            "type": "u64"
+          },
+          {
+            "name": "collateral",
+            "type": "u64"
+          },
+          {
+            "name": "duration_days",
+            "type": "u64"
+          },
+          {
+            "name": "repayment_time",
+            "type": {
+              "option": "i64"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolVaultState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "SOL_USD_FEED_ID",
+      "type": "string",
+      "value": "\"0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d\""
+    }
+  ]
+}
