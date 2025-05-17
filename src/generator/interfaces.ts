@@ -1,5 +1,6 @@
 import {Project, SourceFile} from 'ts-morph';
 import { IdlIR } from '../ir';
+import { mapIdlTypeToTs } from '../utils';
 
 export const generateInterface = (ir: IdlIR, project:Project): SourceFile => {
     const file = project.createSourceFile("types.ts", "", {overwrite:true});
@@ -60,36 +61,3 @@ export const generateInterface = (ir: IdlIR, project:Project): SourceFile => {
 }
 
 
-// Map IDL types to TypeScript types
-function mapIdlTypeToTs(type: string | object): string {
-  if (typeof type === "string") {
-    switch (type) {
-      case "u8":
-      case "u16":
-      case "u32":
-      case "u64":
-      case "i8":
-      case "i16":
-      case "i32":
-      case "i64":
-        return "number";
-      case "pubkey":
-        return "PublicKey";
-      case "string":
-        return "string";
-      case "bool":
-        return "boolean";
-      default:
-        return type; // Assume it's a custom type
-    }
-  } else if (typeof type === "object") {
-    if ("option" in type) {
-      return `${mapIdlTypeToTs(type.option)} | null`;
-    } else if ("vec" in type) {
-      return `${mapIdlTypeToTs(type.vec)}[]`;
-    } else if ("defined" in type) {
-      return type.defined;
-    }
-  }
-  return "unknown";
-}
